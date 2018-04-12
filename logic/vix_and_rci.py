@@ -1,7 +1,10 @@
 import sys
 sys.path.append('/mnt/c/Users/TOSUKUi/Documents/workspace/bitmex-bot')
 import lib.bitmex_api_connecter as connector
+import lib.technical_analysis as ta
 
-
-bitmex = connector.test_connection()
-print(bitmex.id, bitmex.load_markets())
+def execute(martkets, upperband, lowerband):
+    #rciの値[long, mid, short]
+    rci3lines = ta.rci3lines(long_itv, mid_itv, short_itv, bins)
+    uppderband = upperband
+    lowerband = lowerband

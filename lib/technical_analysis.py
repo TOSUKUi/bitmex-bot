@@ -11,7 +11,6 @@ def rci3lines(long_itv, mid_itv, short_itv, bins):
 
 
 def williams_vix_fix(bins, period):
-    print(float(bins.head(1)["low"]))
     wvf = ((highest(bins["close"], period) - float(bins.head(1)["low"]))/(highest(bins["close"], period))) * 100
     return wvf
 
@@ -46,7 +45,7 @@ def lowest(src, period):
 
 
 def rci(itv, src):
-    return (1.0 - 6.0 * d(itv, src) / (itv * (itv * itv - 1.0))) * 100.0 + 100
+    return (1.0 - 6.0 * d(itv, src) / (itv * (itv * itv - 1.0))) * 100.0
 
 
 def crossover(src, val):

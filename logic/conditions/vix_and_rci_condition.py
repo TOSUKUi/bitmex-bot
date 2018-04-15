@@ -15,6 +15,7 @@ class VixAndRciCondition:
             highest_percentile, lowest_percentile,
             rci_overbought_trigger, rci_oversold_trigger
     ):
+
         self.short_interval = short_interval
         self.middle_interval = middle_interval
         self.long_interval = long_interval
@@ -32,6 +33,7 @@ class VixAndRciCondition:
 
     def is_overbought(self, vrci, wvf):
         wvf_condition = self.__wvf_condition(wvf)
+
         if wvf_condition == 0:
             return False
         elif wvf_condition == 1 and self.__rci_overbought(vrci):
@@ -51,12 +53,15 @@ class VixAndRciCondition:
         upper_band = mid_line - std_dev
         range_high = ta.highest(wvf, self.look_back_period_percentile_high) * self.highest_percentile
         range_low = ta.lowest(wvf, self.look_back_period_percentile_high) * self.lowest_percentile
-        if wvf >= upper_band or wvf >= range_high:
+        if wvf[0] >= upper_band or wvf[0] >= range_high:
             return 1
-        elif wvf <= lower_band or wvf <= range_low:
+        elif wvf[0] <= lower_band or wvf[0] <= range_low:
             return 2
         else:
             return 0
+
+    # def __wvf_overbought_condition(self, wvf):
+
 
     def __rci_overbought(self, rci):
         if ta.crossover(rci, self.high_line):

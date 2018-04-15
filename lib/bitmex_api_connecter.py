@@ -6,10 +6,19 @@ def test_connection():
     f = open("bitmex_api_credential.yml", "r")
     data = yaml.load(f)
     f.close()
-    print(data)
     bitmex = ccxt.bitmex(data["test_net"])
+    bitmex.urls["api"] = bitmex.urls["test"]
     return bitmex
 
 
-if __name__=="__main__":
-    test_connection()
+def main_connection():
+    f = open("bitmex_api_credential.yml", "r")
+    data = yaml.load(f)
+    f.close()
+    bitmex = ccxt.bitmex(data["main_net"])
+    return bitmex
+
+
+def back_test_connection():
+    bitmex = ccxt.bitmex()
+    return bitmex

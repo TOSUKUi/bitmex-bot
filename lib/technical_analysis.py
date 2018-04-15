@@ -2,19 +2,26 @@ import pandas as pd
 
 
 def rci3lines(long_itv, mid_itv, short_itv, bins):
-    close = bins["close"]
-    long = __rci(long_itv, close)
-    mid = __rci(mid_itv, close)
-    short = __rci(short_itv, close)
-    return long, mid, short
+    close = list(bins["close"])
+
+    long = rci(long_itv, close)
+    mid = rci(mid_itv, close)
+    short = rci(short_itv, close)
+    return [long, mid, short]
 
 
 def williams_vix_fix(bins, period):
-    wvf = ((__highest(bins["close"], period)-bins.loc[-1]["low"])/(__highest(bins["close"], period)))
+    print(float(bins.head(1)["low"]))
+    wvf = ((highest(bins["close"], period) - float(bins.head(1)["low"]))/(highest(bins["close"], period))) * 100
     return wvf
 
 
-def __ord(seq, idx, itv):
+def reverse_williams_vix_fix(bins, period):
+    wvf = ((bins.head(1)["high"][0] - lowest(bins["close"], period)) / lowest(bins["close"], period)) * 100
+    return wvf
+
+
+def ord(seq, idx, itv):
     p = seq[idx]
     o = 1
     for i in range(0, itv):
@@ -23,15 +30,34 @@ def __ord(seq, idx, itv):
     return o
 
 
-def __d(itv, src):
+def d(itv, src):
     total = 0.0
     for i in range(0, itv):
-        total += pow((i + 1) - __ord(src, i, itv), 2)
+        total += pow((i + 1) - ord(src, i, itv), 2)
     return total
 
 
-def __highest(src, span):
-    return max(src[:span])
+def highest(src, period):
+    return max(src.head(period))
 
-def __rci(itv, src):
-    return (1.0 - 6.0 * __d(itv, src) / (itv * (itv * itv - 1.0))) * 100.0 + 100
+
+def lowest(src, period):
+    return min(src.head(period))
+
+
+def rci(itv, src):
+    return (1.0 - 6.0 * d(itv, src) / (itv * (itv * itv - 1.0))) * 100.0 + 100
+
+
+def crossover(src, val):
+    if src[0] > val and src[1] <= val:
+        return True
+    else:
+        return False
+
+
+def crossunder(src, val):
+    if src[0] < val and src[1] >= val:
+        return True
+    else:
+        return False

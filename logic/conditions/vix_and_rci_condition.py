@@ -1,5 +1,6 @@
 import pandas as pd
 import lib.technical_analysis as ta
+from numba import jit
 
 class VixAndRciCondition:
 
@@ -31,37 +32,39 @@ class VixAndRciCondition:
         self.rci_overbought_trigger = rci_overbought_trigger
         self.rci_oversold_trigger = rci_oversold_trigger
 
-    def is_overbought(self, vrci, wvf):
-        wvf_condition = self.__wvf_condition(wvf)
 
-        if wvf_condition == 0:
-            return False
-        elif wvf_condition == 1 and self.__rci_overbought(vrci):
+    def is_overbought(self, vrci, rwvf):
+        if self.__wvf_overbought(rwvf) and self.__rci_overbought(vrci):
             return True
+        else:
+            return False
 
     def is_oversold(self, vrci, wvf):
-        wvf_condition = self.__wvf_condition(wvf)
-        if wvf_condition == 0:
-            return False
-        elif wvf_condition == 2 and self.__rci_oversold(vrci):
+        if self.__wvf_oversold(wvf) and self.__rci_overbought(vrci):
             return True
+        else:
+            return False
 
-    def __wvf_condition(self, wvf):
+    def __wvf_oversold(self, wvf):
         std_dev = self.n_sigma * wvf.head(self.bolinger_band_length).std()
         mid_line = wvf.head(self.bolinger_band_length).mean()
-        lower_band = mid_line - std_dev
-        upper_band = mid_line - std_dev
+        upper_band = mid_line + std_dev
         range_high = ta.highest(wvf, self.look_back_period_percentile_high) * self.highest_percentile
-        range_low = ta.lowest(wvf, self.look_back_period_percentile_high) * self.lowest_percentile
         if wvf[0] >= upper_band or wvf[0] >= range_high:
-            return 1
-        elif wvf[0] <= lower_band or wvf[0] <= range_low:
-            return 2
+            return True
         else:
-            return 0
+            return False
 
-    # def __wvf_overbought_condition(self, wvf):
-
+    def __wvf_overbought(self, rwvf):
+        std_dev = self.n_sigma * rwvf.head(self.bolinger_band_length).std()
+        mid_line = rwvf.head(self.bolinger_band_length).mean()
+        upper_band = mid_line + std_dev
+        range_high = ta.highest(rwvf, self.look_back_period_percentile_high) * self.highest_percentile
+        # print(rwvf[0], "upperband", upper_band, "range_high", range_high)
+        if rwvf[0] >= upper_band or rwvf[0] >= range_high:
+            return True
+        else:
+            return False
 
     def __rci_overbought(self, rci):
         if ta.crossover(rci, self.high_line):
@@ -70,6 +73,7 @@ class VixAndRciCondition:
             return False
 
     def __rci_oversold(self, rci):
+        print(rci, self.low_line)
         if ta.crossunder(rci, self.low_line):
             return True
         else:

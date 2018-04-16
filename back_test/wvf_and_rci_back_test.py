@@ -4,6 +4,17 @@ import lib.bitmex_api_connecter as connector
 from logic import vix_and_rci
 from logic.conditions.vix_and_rci_condition import VixAndRciCondition
 import pandas as pd
+from numba import jit
+from tqdm import tqdm
+
+
+
+@jit
+def simulation(df, con_vix_and_rci):
+    pbar = tqdm(total=len(df))
+    for i in range(0, len(df)):
+        pbar.update(1)
+        vix_and_rci.execute(df[i:], con_vix_and_rci, client=None)
 
 
 df = pd.read_pickle("back_test/test_data_xbt_usd.pickle")
@@ -23,5 +34,4 @@ con_vix_and_rci = VixAndRciCondition(
     highest_percentile=0.85,
     lowest_percentile=1.01
 )
-for i in range(0, len(df)):
-    vix_and_rci.execute(df[i:], con_vix_and_rci, client=None)
+simulation(df, con_vix_and_rci)

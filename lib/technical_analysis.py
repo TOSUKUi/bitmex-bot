@@ -1,5 +1,5 @@
 import pandas as pd
-
+from numba import jit
 
 def rci3lines(long_itv, mid_itv, short_itv, bins):
     close = list(bins["close"])
@@ -16,7 +16,7 @@ def williams_vix_fix(bins, period):
 
 
 def reverse_williams_vix_fix(bins, period):
-    wvf = ((bins.head(1)["high"][0] - lowest(bins["close"], period)) / lowest(bins["close"], period)) * 100
+    wvf = ((float(bins.head(1)["high"]) - lowest(bins["close"], period)) / lowest(bins["close"], period)) * 100
     return wvf
 
 

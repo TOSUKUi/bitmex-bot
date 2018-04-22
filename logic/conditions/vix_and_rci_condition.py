@@ -73,7 +73,6 @@ class VixAndRciCondition:
             return False
 
     def __rci_oversold(self, rci):
-        print(rci, self.low_line)
         if ta.crossunder(rci, self.low_line):
             return True
         else:

@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/mnt/c/Users/TOSUKUi/Documents/workspace/bitmex-bot')
+sys.path.append('/Users/TOSUKUi/Documents/workspace/bitmex_bot')
 import lib.bitmex_api_connecter as connector
 from logic import vix_and_rci
 from logic.conditions.vix_and_rci_condition import VixAndRciCondition
@@ -11,11 +11,12 @@ from tqdm import tqdm
 
 @jit
 def simulation(df, con_vix_and_rci):
-    pbar = tqdm(total=len(df))
-    for i in range(0, len(df)):
+    simulation_length = len(df) - con_vix_and_rci.look_back_period_percentile_high
+    pbar = tqdm(total=simulation_length)
+    for i in range(0, simulation_length):
         pbar.update(1)
         vix_and_rci.execute(df[i:], con_vix_and_rci, client=None)
-
+    pbar.close()
 
 df = pd.read_pickle("back_test/test_data_xbt_usd.pickle")
 con_vix_and_rci = VixAndRciCondition(

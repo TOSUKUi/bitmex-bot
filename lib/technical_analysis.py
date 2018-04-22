@@ -1,8 +1,8 @@
 import pandas as pd
-from numba import jit
+import numpy as np
 
 def rci3lines(long_itv, mid_itv, short_itv, bins):
-    close = list(bins["close"])
+    close = np.array(bins["close"])
 
     long = rci(long_itv, close)
     mid = rci(mid_itv, close)
@@ -11,22 +11,20 @@ def rci3lines(long_itv, mid_itv, short_itv, bins):
 
 
 def williams_vix_fix(bins, period):
-    wvf = ((highest(bins["close"], period) - float(bins.head(1)["low"]))/(highest(bins["close"], period))) * 100
+    high = highest(bins["close"], period)
+    wvf = ((high - float(bins.head(1)["low"])) / high) * 100
     return wvf
 
 
 def reverse_williams_vix_fix(bins, period):
-    wvf = ((float(bins.head(1)["high"]) - lowest(bins["close"], period)) / lowest(bins["close"], period)) * 100
+    low = lowest(bins["close"], period)
+    wvf = ((float(bins.head(1)["high"]) - low) / low) * 100
     return wvf
 
 
 def ord(seq, idx, itv):
     p = seq[idx]
-    o = 1
-    for i in range(0, itv):
-        if p < seq[i]:
-            o = o + 1
-    return o
+    return np.sum(seq[0:itv] < p)
 
 
 def d(itv, src):
@@ -37,11 +35,11 @@ def d(itv, src):
 
 
 def highest(src, period):
-    return max(src.head(period))
+    return src.head(period).max()
 
 
 def lowest(src, period):
-    return min(src.head(period))
+    return src.head(period).min()
 
 
 def rci(itv, src):

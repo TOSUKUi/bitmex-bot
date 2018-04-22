@@ -13,6 +13,7 @@ def execute(bins, conditions, client=None):
 
     wvfs = [ta.williams_vix_fix(bins[i:], conditions.look_back_period_of_standard_deviation_high)
             for i in range(0, conditions.look_back_period_percentile_high + 1)]
+
     s_wvfs = pd.Series(wvfs)
 
     rwvfs = [ta.reverse_williams_vix_fix(bins[i:], conditions.look_back_period_of_standard_deviation_high)

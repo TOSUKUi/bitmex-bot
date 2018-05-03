@@ -1,12 +1,12 @@
 import sys
-sys.path.append('/Users/TOSUKUi/Documents/workspace/bitmex_bot')
+sys.path.append('.')
 import lib.bitmex_api_connecter as connector
 from logic import vix_and_rci
 from logic.conditions.vix_and_rci_condition import VixAndRciCondition
 import pandas as pd
 from numba import jit
 from tqdm import tqdm
-
+import multiprocessing
 
 
 @jit

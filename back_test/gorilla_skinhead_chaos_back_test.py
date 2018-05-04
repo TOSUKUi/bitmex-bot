@@ -6,12 +6,14 @@ import pandas as pd
 from numba import jit
 from tqdm import tqdm
 import multiprocessing
-
+import lib.bitmex_api_connecter as connector
 
 
 def simulation(df, con):
     simulation_length = len(df) - con.ema_slow_length
 
+    client = connector.back_test_connection()
+    client.create_limit_buy_order()
     for i in tqdm(range(0, simulation_length)):
         gorilla_skinhead_chaos.execute(df[i:], con, client=None)
 

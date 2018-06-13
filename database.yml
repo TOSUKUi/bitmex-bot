@@ -1,0 +1,10 @@
+test:
+  host: localhost
+  port: 3306
+  user: bitmex
+  passwd: bitmex
+  database: bitmex_test
+
+development:
+
+production:

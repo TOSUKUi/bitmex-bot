@@ -18,9 +18,7 @@ def trailing_start(amount, side, client=None,):
     """
     if client is not None:
         client.create_market_order("BTC/USD", amount=amount, side=side, params={'type': 'Stop', "stopPx": -50})
-
-
-    pass
+    
 
 
 def stop_loss():
@@ -28,8 +26,8 @@ def stop_loss():
 
 
 def calc_amount(levarage):
-
+    pass
 
 
 def profit_out():
-
+    pass

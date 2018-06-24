@@ -12,5 +12,3 @@ class Connection():
     def positions(self):
         query = "SELECT position"
         self.cursor.execute(query)
-
-

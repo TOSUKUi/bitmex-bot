@@ -29,7 +29,7 @@ class Migration:
         `entried_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
         `closed_at` datetime DEFAULT NULL,
         `entry_price` decimal(8,1) DEFAULT 1.0 NOT NULL ,
-        `volume` decimal(10,6) DEFAULT NULL,
+        `amount` decimal(10,6) DEFAULT NULL,
         `close_price` decimal(8, 1) DEFAULT NULL,
         `side` tinyint(1) NOT NULL DEFAULT 1, 
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -16,7 +16,7 @@ class Order():
         self.test = test
         self.symbol = symbol
         self.bot_id = bot_id
-        self.trading_file = "{bot_id}_trading_file.csv".format(bot_id=bot_id)
+        self.trading_file = "trading_data/{bot_id}_trading_file.csv".format(bot_id=bot_id)
 
     def create_order(self, amount, side, price=None):
         df = pd.read_csv(self.trading_file)
@@ -26,20 +26,23 @@ class Order():
         if len(positions) < 1:
             if self.client is not None:
                 if price is not None:
-                    result = self.client.create_limit_buy_order("BTC/USD", amount=amount, price=price)
+                    result = self.client.create_limit_order("BTC/USD", side=side, amount=amount, price=price)
                 else:
-                    result = self.client.create_market_buy_order("BTC/USD", amount=amount)
+                    result = self.client.create_market_order("BTC/USD", side=side, amount=amount)
                 position["entry_price"] = result["price"]
                 position["is_test"] = 0
             else:
                 position["entry_price"] = price
                 position["is_test"] = 1
-
-            position = {}
             position["closed"] = 0
             position["entried_at"] = datetime.now()
+            position["side"] = side
+            position["amount"] = amount
+            position["close_price"] = 0
+            df.append()
 
-            df.append([])
+
+
 
 
     def create_stop_order(self, amount, id):

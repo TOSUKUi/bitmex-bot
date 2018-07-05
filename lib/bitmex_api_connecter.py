@@ -2,7 +2,7 @@ import ccxt
 import yaml
 
 
-def test_connection(bot_id):
+def test_connection():
     f = open("bitmex_api_credential.yml", "r")
     data = yaml.load(f)
     f.close()
@@ -11,7 +11,7 @@ def test_connection(bot_id):
     return bitmex
 
 
-def main_connection(bot_id):
+def main_connection():
     f = open("bitmex_api_credential.yml", "r")
     data = yaml.load(f)
     f.close()

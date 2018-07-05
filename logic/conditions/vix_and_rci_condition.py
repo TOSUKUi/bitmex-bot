@@ -4,18 +4,7 @@ from numba import jit
 
 class VixAndRciCondition:
 
-    def __init__(
-            self,
-            short_interval, middle_interval, long_interval,
-            source,
-            high_line, low_line,
-            look_back_period_of_standard_deviation_high,
-            bolinger_band_length,
-            n_sigma,
-            look_back_period_percentile_high,
-            highest_percentile, lowest_percentile,
-            rci_overbought_trigger, rci_oversold_trigger
-    ):
+    def __init__(self,):
 
         self.short_interval = short_interval
         self.middle_interval = middle_interval

@@ -1,7 +1,16 @@
-import lib.technical_analysis as ta
+import lib.technical_analysis as tech_ana
+import ta
+import pandas
 
 
-def execute():
+
+def change(series, length=1):
+    return series[0] - series[length]
+
+
+def execute(bins):
+    hlc3 = (bins["high"] + bins["low"] + bins["close"]) / 3
+
     up = rma(max(change(hlc3), 0), 6)
     down = rma(-min(change(hlc3), 0), 6)
 

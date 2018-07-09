@@ -11,6 +11,7 @@ def change(series, length=1):
 def execute(bins):
     hlc3 = (bins["high"] + bins["low"] + bins["close"]) / 3
 
+
     up = rma(max(change(hlc3), 0), 6)
     down = rma(-min(change(hlc3), 0), 6)
 

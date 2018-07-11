@@ -1,11 +1,11 @@
 import ccxt
 import sys
-sys.path.append("/Users/TOSUKUi/Documents/workspace/bitmex_bot")
-import lib.bitmex_api_connecter as connector
+from lib import bitmex_api_connecter as connector
 import pandas as pd
 from datetime import datetime
 import time
 import logging
+from lib import logger as logger
 from ccxt.base.errors import ExchangeError
 from ccxt.base.errors import AuthenticationError
 from ccxt.base.errors import OrderNotFound
@@ -57,16 +57,17 @@ class Order():
     def send_close_order(self):
         df = self.__trading_data()
         logging.info("close position...")
-        response = self.client.private_post_order_closeposition({"symbol":"XBTUSD"})
-        print(response)
-        result = self.client.parse_order(response)
+        response = self.client.private_post_order_closeposition({"symbol": "XBTUSD"})
+        result = self.client.parse_order(response, market={"symbol": "BTC/USD"})
         del result["info"]
         df = df.append(result, ignore_index=True)
         df.to_csv(self.trading_file)
+        del df
 
 
-    def create_stop_order(self, amount, id, px):
-        params = {'type': 'Stop', "stopPx": -50}
+    # def create_stop_order(self, amount, id, stop_offset):
+    #     params = {'type': 'Stop', "stopPx": stop_offset}
+
 
 
     def __trading_data(self):
@@ -91,6 +92,3 @@ class Order():
                 ]
             df = pd.DataFrame({}, columns=columns)
         return df
-
-orderer = Order(bot_id="unko", test=True)
-orderer.send_close_order()

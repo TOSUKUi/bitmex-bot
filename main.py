@@ -1,33 +1,28 @@
-from logic import vix_and_rci
-from lib.bitmex_api_connecter import test_connection
-import pandas as pd
-import lib.technical_analysis as ta
-from logic import vix_and_rci
-from logic.conditions.vix_and_rci_condition import VixAndRciCondition
+from lib import order, fetcher
+from logic import *
+import yaml
 
+ENTRY_OPERATION = ["Buy", "Sell"]
+EXIT_OPERATION = ["Close"]
+PASS_OPERATION = ["Nothing"]
+
+
+def read_configration():
+    f = open('bot_management.yml', 'r')
+    configrations = yaml.load(f.read())
+    return configrations
 
 
 if __name__ == "__main__":
-
-    bitmex = test_connection()
-    # their max is 500, default is 100 candles
-
-    limit = 500
-    since = bitmex.milliseconds() - limit * 300 * 1000
-
-    # 5分感覚で繰り返し
-    bins = bitmex.fetch_ohlcv('BTC/USD', timeframe="5m", since=since, limit=limit)
-    df = pd.DataFrame(bins[1:], columns=["timestamp", "open", "high", "low", "close", "volume"]).sort_values(by="timestamp", ascending=False)
-    df.index = list(range(0, len(bins)))
-    vix_and_rci_condition = VixAndRciCondition("条件")
-    vix_and_rci.execute(df, vix_and_rci_condition, bitmex)
-
-
-
-
-
-    #fig = plt.figure()
-    #ax = plt.subplot()
-    #mpf.candlestick_ochl(ax, df[["timestamp", "open", "high", "low", "close"]])
-    #ax.grid()
-    #fig.autofmt_xdate()
+    config = read_configration()
+    order_obj = order.Order(config["bot_id"], config["api_credential"], config["trading_platform"], config["symbol"], config["test"])
+    ohlcv = fetcher.ohlcv(symbol=config["symbol"], platform=config["trading_platform"], span=config["legs_span"])
+    operation = eval(config["logic"])
+    if operation in ENTRY_OPERATION:
+        order_obj.send_order(config["trade_amount"], operation)
+    elif operation in PASS_OPERATION:
+        pass
+    elif operation in EXIT_OPERATION:
+        order_obj.send_close_order()
+    else: 
+        raise Exception("Operation which logic returned is invalid")

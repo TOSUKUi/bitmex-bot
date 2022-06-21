@@ -11,7 +11,7 @@ idna-ssl==1.1.0
 llvmlite==0.24.0
 multidict==4.3.1
 numba==0.39.0
-numpy==1.14.5
+numpy==1.22.0
 pandas==0.23.3
 pycares==2.3.0
 python-dateutil==2.7.3

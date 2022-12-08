@@ -4,7 +4,7 @@ async-timeout==3.0.0
 attrs==18.1.0
 cchardet==2.1.1
 ccxt==1.16.78
-certifi==2018.4.16
+certifi==2022.12.7
 chardet==3.0.4
 idna==2.7
 idna-ssl==1.1.0
